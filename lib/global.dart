@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class Global{
   String cleaningString(data){
-    var arrPattern=[RegExp(r"(<iframe .*?>)(</iframe>)"),RegExp(r"(<img .*?/>)"),RegExp(r"(<strong></strong>)"),RegExp(r"<p><\/p>")];
+    var arrPattern=[RegExp(r"(<iframe .*?>)(</iframe>)"),RegExp(r"(<img .*?/>)"),RegExp(r"(<strong></strong>)")];
     var str=data;
     for(var pat in arrPattern){
       str=str.replaceAll(pat, '').toString();
@@ -16,6 +17,7 @@ class Global{
     return pattern.stringMatch(data)==null?"":pattern.stringMatch(data);
   }
   static fetchData(url) async {
+    try{
     var baseUrl='https://gia007.000webhostapp.com/wp-json/wp/v2/';
     print(baseUrl+url);
     final response = await http.get(Uri.parse(baseUrl+url));
@@ -31,7 +33,7 @@ class Global{
           print("*************************************************************");
 //          print(cleanContent);
           var objRes={"id":val['id'],"title":val['title']['rendered'],"excerpt":val['excerpt']['rendered'],
-            "content":val['content']['rendered'],"content_short":cleanContent.substring(0,100),
+            "content":cleanContent,"content_short":cleanContent.substring(0,250),
             "youtube":Global().getTagHTML(content,RegExp(r"(<iframe .*?>)(</iframe>)")),
             "image":Global().getTagHTML(content,RegExp(r"(<img .*?/>)")),
             "author":{"name":val['_embedded']['author'][0]['name'],"link":val['_embedded']['author'][0]['link']},
@@ -44,6 +46,10 @@ class Global{
     else {
       print("Ada error om !!!");
       throw Exception('Failed to fetching data');
+    }
+    }on TimeoutException catch (e) {
+      print("Error"+e.toString());
+      throw Error();
     }
   }
 

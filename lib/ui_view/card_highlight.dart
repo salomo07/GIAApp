@@ -107,7 +107,6 @@ class _CardHighLightViewState extends State<CardHighLightView>{
         for (var m in stringURL) {
           imageURL="https://img.youtube.com/vi/"+m[1].toString()+"/0.jpg";
         }
-        print(imageURL);
 
         return Padding(
           padding: const EdgeInsets.only(
@@ -155,27 +154,10 @@ class _CardHighLightViewState extends State<CardHighLightView>{
                             ],
                           ),
                         ),
+                        SingleChildScrollView(
+                          padding: EdgeInsets.all(16),
+                          child: HtmlWidget(widget.jsonData['content_short']),)
                       ],
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(32.0),
-                          ),
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.favorite_border,
-                              color: HexColor('#54D3C2'),
-                            ),
-                          ),
-                        ),
-                      ),
                     )
                   ],
                 ),
@@ -194,14 +176,7 @@ class _CardHighLightViewState extends State<CardHighLightView>{
               },
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: <HexColor>[
-                      HexColor("#b0fffd"),
-                      HexColor("#dcf5f4"),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: AppTheme.white,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(28.0),bottomLeft: Radius.circular(8.0),bottomRight: Radius.circular(8.0),topRight: Radius.circular(28.0)),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
@@ -218,28 +193,24 @@ class _CardHighLightViewState extends State<CardHighLightView>{
                         children: <Widget>[
                           Expanded(child:
                           Column(children:[
-                            Text(widget.jsonData['title'],overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 18,color: AppTheme.nearlyDarkBlue,fontWeight: FontWeight.w500,fontFamily: AppTheme.fontName))]
+                            Text(widget.jsonData['title'],overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 18,color: AppTheme.nearlyDarkBlue,fontWeight: FontWeight.w500,fontFamily: AppTheme.fontName)),
+                          ]
                           )
                           )
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
-                      child: Container(height: 1,decoration: BoxDecoration(color: Colors.blueGrey,borderRadius: BorderRadius.all(Radius.circular(4.0)))),
-                    ),
+
                     Padding(
                         padding: EdgeInsets.all(16),
-                        child:SizedBox(height: 150,child:
-                        SingleChildScrollView(padding: EdgeInsets.all(16),child:
-                        HtmlWidget(widget.jsonData['content_short'],webView: true,onLoadingBuilder:(context, element, loadingProgress)=>CircularProgressIndicator()
-                        )
-                        )
+                        child:FractionallySizedBox(
+                            widthFactor:0.95,
+                            child:
+                            Stack(children:[
+                              HtmlWidget(widget.jsonData['content_short'],webView: true,onLoadingBuilder:(context, element, loadingProgress)=>CircularProgressIndicator())
+                            ])
                         )),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 8),
-                      child: Container(height: 1,decoration: BoxDecoration(color: AppTheme.grey,borderRadius: BorderRadius.all(Radius.circular(4.0)))),
-                    ),
+
                     Padding(padding: const EdgeInsets.only(left: 24, right: 24, top: 8, bottom: 16),
                         child: Row(children:
                         <Widget>[
@@ -324,118 +295,3 @@ class _CardHighLightViewState extends State<CardHighLightView>{
   }
 }
 
-class CurvePainter extends CustomPainter {
-  final double? angle;
-  final List<Color>? colors;
-
-  CurvePainter({this.colors, this.angle = 140});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    List<Color> colorsList = [];
-    if (colors != null) {
-      colorsList = colors ?? [];
-    } else {
-      colorsList.addAll([Colors.white, Colors.white]);
-    }
-
-    final shdowPaint = new Paint()
-      ..color = Colors.black.withOpacity(0.4)
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 14;
-    final shdowPaintCenter = new Offset(size.width / 2, size.height / 2);
-    final shdowPaintRadius =
-        math.min(size.width / 2, size.height / 2) - (14 / 2);
-    canvas.drawArc(
-        new Rect.fromCircle(center: shdowPaintCenter, radius: shdowPaintRadius),
-        degreeToRadians(278),
-        degreeToRadians(360 - (365 - angle!)),
-        false,
-        shdowPaint);
-
-    shdowPaint.color = Colors.grey.withOpacity(0.3);
-    shdowPaint.strokeWidth = 16;
-    canvas.drawArc(
-        new Rect.fromCircle(center: shdowPaintCenter, radius: shdowPaintRadius),
-        degreeToRadians(278),
-        degreeToRadians(360 - (365 - angle!)),
-        false,
-        shdowPaint);
-
-    shdowPaint.color = Colors.grey.withOpacity(0.2);
-    shdowPaint.strokeWidth = 20;
-    canvas.drawArc(
-        new Rect.fromCircle(center: shdowPaintCenter, radius: shdowPaintRadius),
-        degreeToRadians(278),
-        degreeToRadians(360 - (365 - angle!)),
-        false,
-        shdowPaint);
-
-    shdowPaint.color = Colors.grey.withOpacity(0.1);
-    shdowPaint.strokeWidth = 22;
-    canvas.drawArc(
-        new Rect.fromCircle(center: shdowPaintCenter, radius: shdowPaintRadius),
-        degreeToRadians(278),
-        degreeToRadians(360 - (365 - angle!)),
-        false,
-        shdowPaint);
-
-    final rect = new Rect.fromLTWH(0.0, 0.0, size.width, size.width);
-    final gradient = new SweepGradient(
-      startAngle: degreeToRadians(268),
-      endAngle: degreeToRadians(270.0 + 360),
-      tileMode: TileMode.repeated,
-      colors: colorsList,
-    );
-    final paint = new Paint()
-      ..shader = gradient.createShader(rect)
-      ..strokeCap = StrokeCap.round // StrokeCap.round is not recommended.
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 14;
-    final center = new Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width / 2, size.height / 2) - (14 / 2);
-
-    canvas.drawArc(
-        new Rect.fromCircle(center: center, radius: radius),
-        degreeToRadians(278),
-        degreeToRadians(360 - (365 - angle!)),
-        false,
-        paint);
-
-    final gradient1 = new SweepGradient(
-      tileMode: TileMode.repeated,
-      colors: [Colors.white, Colors.white],
-    );
-
-    var cPaint = new Paint();
-    cPaint..shader = gradient1.createShader(rect);
-    cPaint..color = Colors.white;
-    cPaint..strokeWidth = 14 / 2;
-    canvas.save();
-
-    final centerToCircle = size.width / 2;
-    canvas.save();
-
-    canvas.translate(centerToCircle, centerToCircle);
-    canvas.rotate(degreeToRadians(angle! + 2));
-
-    canvas.save();
-    canvas.translate(0.0, -centerToCircle + 14 / 2);
-    canvas.drawCircle(new Offset(0, 0), 14 / 5, cPaint);
-
-    canvas.restore();
-    canvas.restore();
-    canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-
-  double degreeToRadians(double degree) {
-    var redian = (math.pi / 180) * degree;
-    return redian;
-  }
-}

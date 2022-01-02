@@ -5,7 +5,7 @@ import 'package:badges/badges.dart';
 
 import '../global.dart';
 import '../ui_view/card_highlight.dart';
-import '../ui_view/body_measurement.dart';
+import '../ui_view/body_measurement2.dart';
 import '../ui_view/glass_view.dart';
 import '../ui_view/meals_list_view.dart';
 import '../ui_view/title_view.dart';
@@ -193,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen>with TickerProviderStateMixin {
   }
 
   Widget getTopBarUI() {
+    print(topBarOpacity);
     return Column(
       children: <Widget>[
         AnimatedBuilder(

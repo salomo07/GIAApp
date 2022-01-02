@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:giar/global.dart';
+import 'package:giar/main.dart';
+import 'package:giar/theme/app_theme.dart';
 import '../theme/design_course_app_theme.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:flutter/services.dart';
@@ -39,34 +42,37 @@ class _DetailPostScreenState extends State<DetailPostScreen> with TickerProvider
         (MediaQuery.of(context).size.width / 1.2) +
         24.0;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.dark,
+      statusBarColor: HexColor("#738AE6"),
+      statusBarBrightness: Brightness.light,
     ));
+    var media=null;
+    if(widget.jsonData['youtube']!="" || widget.jsonData['image']!=""){
+      media=Column(
+          children: [
+            widget.jsonData['youtube']!=""?HtmlWidget(widget.jsonData['youtube'],webView: true):HtmlWidget(widget.jsonData['image'],webView: true),
+            Padding(padding: EdgeInsets.only(bottom: 16),),
+            HtmlWidget(widget.jsonData['content'])
+          ]
+      );
+    }
+    else{media=HtmlWidget(widget.jsonData['content']);}
+
     return Container(
+      padding: EdgeInsets.only(top:MediaQuery.of(context).padding.top),
       color: DesignCourseAppTheme.nearlyWhite,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
+          overflow: Overflow.clip,
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1.2,
-                  child: HtmlWidget(widget.jsonData['youtube']!=""?widget.jsonData['youtube']:widget.jsonData['image'],webView: true),
-//                  child: Image.asset('assets/images/webInterFace.png'),
-//                  child: Html YoutubePlayer(
-//                    controller: widget._controller,
-//                    showVideoProgressIndicator: true,
-//                  ),
-                ),
-              ],
+            SingleChildScrollView(
+                padding:EdgeInsets.all(24),
+                child: media
             ),
-
             Padding(
-              padding: EdgeInsets.only(top: 50+MediaQuery.of(context).padding.top),
+              padding: EdgeInsets.only(top:MediaQuery.of(context).padding.top),
               child: SizedBox(
                 width: AppBar().preferredSize.height,
-                height: AppBar().preferredSize.height,
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
